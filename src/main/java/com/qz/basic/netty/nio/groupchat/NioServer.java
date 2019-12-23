@@ -15,6 +15,8 @@ import java.util.Set;
  */
 public class NioServer {
 
+    private static final int PORT = 6666;
+
     public static void main(String[] args) throws IOException {
 
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
@@ -22,21 +24,18 @@ public class NioServer {
         //java.nio.channels.IllegalBlockingModeException
         serverSocketChannel.configureBlocking(false);
 
-        serverSocketChannel.bind(new InetSocketAddress(6666));
+        serverSocketChannel.bind(new InetSocketAddress(PORT));
 
         Selector selector = Selector.open();
 
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
         while (true) {
+
+            //阻塞操作
             if (selector.select() == 0) {
                 continue;
             }
-
-            /*if (selector.select(2000) == 0) {
-                System.out.println("等待2s没有客户端连接...");
-                continue;
-            }*/
 
             Set<SelectionKey> selectionKeys = selector.selectedKeys();
             Iterator<SelectionKey> keyIterator = selectionKeys.iterator();
